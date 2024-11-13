@@ -10,4 +10,4 @@ import { BankRepository } from './bank.repository'
   controllers: [BankController],
   providers: [BankService, BankRepository]
 })
-export class UserModule {}
+export class BankModule {}
