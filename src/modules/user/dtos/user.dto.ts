@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { BankDto } from '../../bank/dtos/bank.dto'
+import { Bank } from '../../../db/entities/bank.model'
 
 export class UserDto {
   @ApiProperty({ example: 'John', description: 'The first name of the user' })
@@ -18,5 +19,5 @@ export class UserDto {
     type: [BankDto],
     description: "References to the user's bank details"
   })
-  bank_details: BankDto[]
+  bank_details: Bank[]
 }

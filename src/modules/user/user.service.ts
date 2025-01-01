@@ -1,80 +1,49 @@
 import { Injectable } from '@nestjs/common'
 import { UserRepository } from './user.repository'
+import { User } from '../../db/entities/user.model'
+import { CreateUpdateUserDto } from './dtos/create-update-user.dto'
+import { UserDto } from './dtos/user.dto'
 
 @Injectable()
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
-  /*
   async createUser(userData: CreateUpdateUserDto): Promise<User> {
     try {
       return await this.userRepository.create(userData)
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException(error.message)
-      }
-      throw error
+      throw new Error(error.message)
     }
   }
 
-  async createUserNov(userData: CreateUpdateUserDto): Promise<UserResponseDto> {
-    const user = mapCreateUserDtoToUser(userData)
-    const createdUser = await this.userRepository.createNov(user)
-    return this.toUserResponseDto(createdUser)
-  }
-
-  async getAllUsers(): Promise<UserResponseDto[]> {
+  async getSingleUser(userId: string): Promise<UserDto> {
     try {
-      const users = await this.userRepository.find({})
-      return users.map(this.toUserResponseDto)
+      return await this.userRepository.findOne({ _id: userId })
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException(error.message)
-      }
-      throw error // Re-throw other unexpected errors
+      throw new Error(error.message)
     }
   }
 
-  async getSingleUser(userId: string): Promise<UserResponseDto> {
+  async getAllUsers(): Promise<UserDto[]> {
     try {
-      const user = await this.userRepository.findOne({ _id: userId })
-      if (!user) {
-        throw new NotFoundException(`User with ID ${userId} not found.`)
-      }
-      return this.toUserResponseDto(user)
+      return await this.userRepository.find({})
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException(error.message)
-      }
-      throw error // Re-throw other unexpected errors
+      throw new Error(error.message)
     }
   }
 
-  private toUserResponseDto(user: User): UserResponseDto {
-    return {
-      id: user._id.toString(),
-      name: user.name,
-      surname: user.surname,
-      email: user.email,
-      bank_details: user.bank_details.map((bank) => ({
-        bank_name: bank.bank_name,
-        account_name: bank.account_name,
-        account_number: bank.account_number,
-        iban: bank.iban,
-        status: bank.status
-      })),
-      toObject: function () {
-        return { ...this }
-      }
+  async updateUser(userId: string, userData: CreateUpdateUserDto): Promise<User> {
+    try {
+      return await this.userRepository.update(userId, userData)
+    } catch (error) {
+      throw new Error(error.message)
     }
   }
 
-  toUserEntity(dto: CreateUpdateUserDto): User {
-    const user = new User()
-    user.name = dto.name
-    user.surname = dto.surname
-    user.email = dto.email
-    user.bank_details = dto.bank_details
-    return user
+  async deleteUser(userId: string): Promise<boolean> {
+    try {
+      return await this.userRepository.delete(userId)
+    } catch (error) {
+      throw new Error(error.message)
+    }
   }
-  */
 }
