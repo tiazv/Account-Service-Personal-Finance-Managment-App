@@ -7,11 +7,24 @@ import { User } from '../../db/entities/user.model'
 export class UserRepository {
   constructor(@InjectModel('User') public userModel: Model<User>) {}
 
-  async create(user: User): Promise<User> {
+  async create(user: Partial<User>): Promise<User> {
     try {
       return await new this.userModel(user).save()
     } catch {
       throw new NotFoundException('Could not create user.')
+    }
+  }
+
+  async createNov(user: Partial<User>): Promise<User> {
+    const createdUser = new this.userModel(user)
+    return await createdUser.save()
+  }
+
+  async find(usersFilterQuery: FilterQuery<User>): Promise<User[]> {
+    try {
+      return await this.userModel.find(usersFilterQuery)
+    } catch {
+      throw new NotFoundException('Could not find the users.')
     }
   }
 

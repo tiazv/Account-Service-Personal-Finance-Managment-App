@@ -7,7 +7,7 @@ import { BankModule } from './modules/bank/bank.module'
 import { UserModule } from './modules/user/user.module'
 
 @Module({
-  imports: [ConfigModule.forRoot(), MongooseModule.forRoot(`${process.env.MONGODB_URI}`), UserModule, BankModule],
+  imports: [ConfigModule.forRoot(), MongooseModule.forRoot(process.env.MONGODB_URI), UserModule, BankModule],
   controllers: [AppController],
   providers: [AppService]
 })
