@@ -9,8 +9,6 @@ async function bootstrap() {
     .setTitle('Account API')
     .setDescription('API for managing users accounts')
     .setVersion('1.0')
-    .addTag('user')
-    .addTag('bank')
     .build()
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api', app, document)
