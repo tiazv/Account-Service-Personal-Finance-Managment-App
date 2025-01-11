@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { BankDto } from '../../bank/dtos/bank.dto'
 import { Bank } from '../../../db/entities/bank.model'
-import { IsArray, IsOptional, IsString } from 'class-validator'
+import { IsNumber, IsOptional, IsString } from 'class-validator'
 
 export class UserDto {
   @ApiProperty({ example: 'John', description: 'The first name of the user' })
@@ -21,10 +21,13 @@ export class UserDto {
   password: string
 
   @ApiProperty({
-    type: [BankDto],
+    type: BankDto,
     description: "References to the user's bank details"
   })
-  @IsArray()
   @IsOptional()
-  bank_details: Bank[]
+  bank_details: Bank
+
+  @ApiProperty({ example: '1000', description: "The user's total amount of money" })
+  @IsNumber()
+  total: number
 }

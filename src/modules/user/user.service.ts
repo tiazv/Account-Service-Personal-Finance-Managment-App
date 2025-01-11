@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { UserRepository } from './user.repository'
 import { User } from '../../db/entities/user.model'
 import { CreateUpdateUserDto } from './dtos/create-update-user.dto'
@@ -23,6 +23,14 @@ export class UserService {
     }
   }
 
+  async getSingleUserByClerkId(clerkId: string): Promise<UserDto> {
+    try {
+      return await this.userRepository.findOneByClerkId({ clerk_id: clerkId })
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
+
   async getAllUsers(): Promise<UserDto[]> {
     try {
       return await this.userRepository.find({})
@@ -39,11 +47,41 @@ export class UserService {
     }
   }
 
+  async updateUserByClerkId(clerkId: string, userData: CreateUpdateUserDto): Promise<User> {
+    try {
+      return await this.userRepository.updateByClerkId(clerkId, userData)
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
+
   async deleteUser(userId: string): Promise<boolean> {
     try {
       return await this.userRepository.delete(userId)
     } catch (error) {
       throw new Error(error.message)
     }
+  }
+
+  async deleteUserByClerkId(clerkId: string): Promise<boolean> {
+    try {
+      return await this.userRepository.deleteByClerkId(clerkId)
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
+
+  async addMoneyToUser(clerkId: string, amount: number): Promise<User> {
+    if (amount <= 0) {
+      throw new BadRequestException('Amount must be greater than 0.')
+    }
+    return await this.userRepository.addMoneyByClerkId(clerkId, amount)
+  }
+
+  async removeMoneyFromUser(clerkId: string, amount: number): Promise<User> {
+    if (amount <= 0) {
+      throw new BadRequestException('Amount must be greater than 0.')
+    }
+    return await this.userRepository.removeMoneyByClerkId(clerkId, amount)
   }
 }
