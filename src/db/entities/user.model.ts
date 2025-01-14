@@ -7,7 +7,7 @@ export const UserSchema = new Schema({
   email: { type: String, required: true, lowercase: true },
   password: { type: String, required: true },
   bank_details: { type: Schema.Types.ObjectId, ref: 'Bank', required: true, default: null },
-  clerk_id: { type: String },
+  account_id: { type: String },
   total: { type: Number, required: true, default: 0 }
 })
 
@@ -17,7 +17,7 @@ export interface User extends Document {
   email: string
   password: string
   bank_details: Bank
-  clerk_id: string
+  account_id: string
   total: number
 }
 

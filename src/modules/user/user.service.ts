@@ -23,9 +23,9 @@ export class UserService {
     }
   }
 
-  async getSingleUserByClerkId(clerkId: string): Promise<UserDto> {
+  async getSingleUserByClerkId(accountId: string): Promise<UserDto> {
     try {
-      return await this.userRepository.findOneByClerkId({ clerk_id: clerkId })
+      return await this.userRepository.findOneByClerkId({ account_id: accountId })
     } catch (error) {
       throw new Error(error.message)
     }
@@ -47,9 +47,9 @@ export class UserService {
     }
   }
 
-  async updateUserByClerkId(clerkId: string, userData: CreateUpdateUserDto): Promise<User> {
+  async updateUserByClerkId(accountId: string, userData: CreateUpdateUserDto): Promise<User> {
     try {
-      return await this.userRepository.updateByClerkId(clerkId, userData)
+      return await this.userRepository.updateByClerkId(accountId, userData)
     } catch (error) {
       throw new Error(error.message)
     }
@@ -63,25 +63,25 @@ export class UserService {
     }
   }
 
-  async deleteUserByClerkId(clerkId: string): Promise<boolean> {
+  async deleteUserByClerkId(accountId: string): Promise<boolean> {
     try {
-      return await this.userRepository.deleteByClerkId(clerkId)
+      return await this.userRepository.deleteByClerkId(accountId)
     } catch (error) {
       throw new Error(error.message)
     }
   }
 
-  async addMoneyToUser(clerkId: string, amount: number): Promise<User> {
+  async addMoneyToUser(accountId: string, amount: number): Promise<User> {
     if (amount <= 0) {
       throw new BadRequestException('Amount must be greater than 0.')
     }
-    return await this.userRepository.addMoneyByClerkId(clerkId, amount)
+    return await this.userRepository.addMoneyByClerkId(accountId, amount)
   }
 
-  async removeMoneyFromUser(clerkId: string, amount: number): Promise<User> {
+  async removeMoneyFromUser(accountId: string, amount: number): Promise<User> {
     if (amount <= 0) {
       throw new BadRequestException('Amount must be greater than 0.')
     }
-    return await this.userRepository.removeMoneyByClerkId(clerkId, amount)
+    return await this.userRepository.removeMoneyByClerkId(accountId, amount)
   }
 }

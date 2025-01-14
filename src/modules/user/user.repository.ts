@@ -52,9 +52,11 @@ export class UserRepository {
     }
   }
 
-  async updateByClerkId(clerkId: string, updateData: CreateUpdateUserDto): Promise<User> {
+  async updateByClerkId(accountId: string, updateData: CreateUpdateUserDto): Promise<User> {
     try {
-      const updatedUser = await this.userModel.findOneAndUpdate({ clerk_id: clerkId }, updateData, { new: true }).exec()
+      const updatedUser = await this.userModel
+        .findOneAndUpdate({ account_id: accountId }, updateData, { new: true })
+        .exec()
       if (!updatedUser) {
         throw new NotFoundException('User with the given Clerk ID not found.')
       }
@@ -76,9 +78,9 @@ export class UserRepository {
     }
   }
 
-  async deleteByClerkId(clerkId: string): Promise<boolean> {
+  async deleteByClerkId(accountId: string): Promise<boolean> {
     try {
-      const deletedUser = await this.userModel.findOneAndDelete({ clerk_id: clerkId }).exec()
+      const deletedUser = await this.userModel.findOneAndDelete({ account_id: accountId }).exec()
       if (!deletedUser) {
         throw new NotFoundException('User with the given Clerk ID not found.')
       }
@@ -88,9 +90,9 @@ export class UserRepository {
     }
   }
 
-  async addMoneyByClerkId(clerkId: string, amount: number): Promise<User> {
+  async addMoneyByClerkId(accountId: string, amount: number): Promise<User> {
     const updatedUser = await this.userModel
-      .findOneAndUpdate({ clerk_id: clerkId }, { $inc: { total: amount } }, { new: true })
+      .findOneAndUpdate({ account_id: accountId }, { $inc: { total: amount } }, { new: true })
       .exec()
 
     if (!updatedUser) {
@@ -100,19 +102,15 @@ export class UserRepository {
     return updatedUser
   }
 
-  async removeMoneyByClerkId(clerkId: string, amount: number): Promise<User> {
-    const user = await this.userModel.findOne({ clerk_id: clerkId }).exec()
+  async removeMoneyByClerkId(accountId: string, amount: number): Promise<User> {
+    const user = await this.userModel.findOne({ account_id: accountId }).exec()
 
     if (!user) {
       throw new NotFoundException('User with the given Clerk ID not found.')
     }
 
-    if (user.total < amount) {
-      throw new Error('Insufficient funds.')
-    }
-
     const updatedUser = await this.userModel
-      .findOneAndUpdate({ clerk_id: clerkId }, { $inc: { total: -amount } }, { new: true })
+      .findOneAndUpdate({ account_id: accountId }, { $inc: { total: -amount } }, { new: true })
       .exec()
 
     return updatedUser
