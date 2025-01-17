@@ -23,9 +23,9 @@ export class UserService {
     }
   }
 
-  async getSingleUserByClerkId(accountId: string): Promise<UserDto> {
+  async getSingleUserByAccountId(accountId: string): Promise<UserDto> {
     try {
-      return await this.userRepository.findOneByClerkId({ account_id: accountId })
+      return await this.userRepository.findOneByAccountId({ account_id: accountId })
     } catch (error) {
       throw new Error(error.message)
     }
@@ -47,9 +47,9 @@ export class UserService {
     }
   }
 
-  async updateUserByClerkId(accountId: string, userData: CreateUpdateUserDto): Promise<User> {
+  async updateUserByAccountId(accountId: string, userData: CreateUpdateUserDto): Promise<User> {
     try {
-      return await this.userRepository.updateByClerkId(accountId, userData)
+      return await this.userRepository.updateByAccountId(accountId, userData)
     } catch (error) {
       throw new Error(error.message)
     }
@@ -63,9 +63,9 @@ export class UserService {
     }
   }
 
-  async deleteUserByClerkId(accountId: string): Promise<boolean> {
+  async deleteUserByAccountId(accountId: string): Promise<boolean> {
     try {
-      return await this.userRepository.deleteByClerkId(accountId)
+      return await this.userRepository.deleteByAccountId(accountId)
     } catch (error) {
       throw new Error(error.message)
     }
@@ -75,13 +75,13 @@ export class UserService {
     if (amount <= 0) {
       throw new BadRequestException('Amount must be greater than 0.')
     }
-    return await this.userRepository.addMoneyByClerkId(accountId, amount)
+    return await this.userRepository.addMoneyByAccountId(accountId, amount)
   }
 
   async removeMoneyFromUser(accountId: string, amount: number): Promise<User> {
     if (amount <= 0) {
       throw new BadRequestException('Amount must be greater than 0.')
     }
-    return await this.userRepository.removeMoneyByClerkId(accountId, amount)
+    return await this.userRepository.removeMoneyByAccountId(accountId, amount)
   }
 }

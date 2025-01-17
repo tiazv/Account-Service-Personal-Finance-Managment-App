@@ -1,11 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { UserService } from './user.service'
 import { UserDto } from './dtos/user.dto'
 import { CreateUpdateUserDto } from './dtos/create-update-user.dto'
+import { AuthGuard } from '../../shared/validation'
 
 @ApiTags('user')
 @Controller('/user')
+@UseGuards(AuthGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Post()
@@ -24,8 +26,8 @@ export class UserController {
   @ApiResponse({ status: 400, description: 'Invalid input.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 500, description: 'Internal server error.' })
-  async addMoney(@Body('clerkId') clerkId: string, @Body('amount') amount: number): Promise<UserDto> {
-    return this.userService.addMoneyToUser(clerkId, amount)
+  async addMoney(@Body('accountId') accountId: string, @Body('amount') amount: number): Promise<UserDto> {
+    return this.userService.addMoneyToUser(accountId, amount)
   }
 
   @Put('/remove-money')
@@ -34,18 +36,18 @@ export class UserController {
   @ApiResponse({ status: 400, description: 'Invalid input.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 500, description: 'Internal server error.' })
-  async removeMoney(@Body('clerkId') clerkId: string, @Body('amount') amount: number): Promise<UserDto> {
-    return this.userService.removeMoneyFromUser(clerkId, amount)
+  async removeMoney(@Body('accountId') accountId: string, @Body('amount') amount: number): Promise<UserDto> {
+    return this.userService.removeMoneyFromUser(accountId, amount)
   }
 
-  @Get('/clerk/:id')
-  @ApiOperation({ summary: 'Retrieve a single user by Clerk ID' })
+  @Get('/account/:id')
+  @ApiOperation({ summary: 'Retrieve a single user by Account ID' })
   @ApiResponse({ status: 200, description: 'User details.', type: UserDto })
   @ApiResponse({ status: 404, description: 'User not found.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 500, description: 'Internal server error.' })
-  async getUserByClerkId(@Param('id') id: string): Promise<UserDto> {
-    return await this.userService.getSingleUserByClerkId(id)
+  async getUserByAccountId(@Param('id') id: string): Promise<UserDto> {
+    return await this.userService.getSingleUserByAccountId(id)
   }
 
   @Get(':id')
@@ -68,15 +70,15 @@ export class UserController {
     return await this.userService.getAllUsers()
   }
 
-  @Put('/clerk/:id')
-  @ApiOperation({ summary: 'Update a user by Clerk ID' })
+  @Put('/account/:id')
+  @ApiOperation({ summary: 'Update a user by Account ID' })
   @ApiResponse({ status: 200, description: 'User updated successfully.', type: UserDto })
   @ApiResponse({ status: 404, description: 'User not found.' })
   @ApiResponse({ status: 400, description: 'Invalid user input.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 500, description: 'Internal server error.' })
-  async updateUserByClerkId(@Param('id') id: string, @Body() updateUserDto: CreateUpdateUserDto): Promise<UserDto> {
-    return await this.userService.updateUserByClerkId(id, updateUserDto)
+  async updateUserByAccountId(@Param('id') id: string, @Body() updateUserDto: CreateUpdateUserDto): Promise<UserDto> {
+    return await this.userService.updateUserByAccountId(id, updateUserDto)
   }
 
   @Put(':id')
@@ -90,14 +92,14 @@ export class UserController {
     return await this.userService.updateUser(id, updateUserDto)
   }
 
-  @Delete('/clerk/:id')
-  @ApiOperation({ summary: 'Delete a user by Clerk ID' })
+  @Delete('/account/:id')
+  @ApiOperation({ summary: 'Delete a user by Account ID' })
   @ApiResponse({ status: 200, description: 'User deleted successfully.', type: Boolean })
   @ApiResponse({ status: 404, description: 'User not found.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 500, description: 'Internal server error.' })
-  async deleteUserByClerkId(@Param('id') id: string): Promise<boolean> {
-    return await this.userService.deleteUserByClerkId(id)
+  async deleteUserByAccountId(@Param('id') id: string): Promise<boolean> {
+    return await this.userService.deleteUserByAccountId(id)
   }
 
   @Delete(':id')

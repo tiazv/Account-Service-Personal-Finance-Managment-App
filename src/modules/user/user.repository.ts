@@ -32,7 +32,7 @@ export class UserRepository {
     }
   }
 
-  async findOneByClerkId(userFilterQuery: FilterQuery<User>): Promise<User> {
+  async findOneByAccountId(userFilterQuery: FilterQuery<User>): Promise<User> {
     try {
       return await this.userModel.findOne(userFilterQuery).populate('bank_details').exec()
     } catch {
@@ -52,13 +52,13 @@ export class UserRepository {
     }
   }
 
-  async updateByClerkId(accountId: string, updateData: CreateUpdateUserDto): Promise<User> {
+  async updateByAccountId(accountId: string, updateData: CreateUpdateUserDto): Promise<User> {
     try {
       const updatedUser = await this.userModel
         .findOneAndUpdate({ account_id: accountId }, updateData, { new: true })
         .exec()
       if (!updatedUser) {
-        throw new NotFoundException('User with the given Clerk ID not found.')
+        throw new NotFoundException('User with the given Account ID not found.')
       }
       return updatedUser
     } catch (error) {
@@ -78,11 +78,11 @@ export class UserRepository {
     }
   }
 
-  async deleteByClerkId(accountId: string): Promise<boolean> {
+  async deleteByAccountId(accountId: string): Promise<boolean> {
     try {
       const deletedUser = await this.userModel.findOneAndDelete({ account_id: accountId }).exec()
       if (!deletedUser) {
-        throw new NotFoundException('User with the given Clerk ID not found.')
+        throw new NotFoundException('User with the given Account ID not found.')
       }
       return true
     } catch (error) {
@@ -90,23 +90,23 @@ export class UserRepository {
     }
   }
 
-  async addMoneyByClerkId(accountId: string, amount: number): Promise<User> {
+  async addMoneyByAccountId(accountId: string, amount: number): Promise<User> {
     const updatedUser = await this.userModel
       .findOneAndUpdate({ account_id: accountId }, { $inc: { total: amount } }, { new: true })
       .exec()
 
     if (!updatedUser) {
-      throw new NotFoundException('User with the given Clerk ID not found.')
+      throw new NotFoundException('User with the given Account ID not found.')
     }
 
     return updatedUser
   }
 
-  async removeMoneyByClerkId(accountId: string, amount: number): Promise<User> {
+  async removeMoneyByAccountId(accountId: string, amount: number): Promise<User> {
     const user = await this.userModel.findOne({ account_id: accountId }).exec()
 
     if (!user) {
-      throw new NotFoundException('User with the given Clerk ID not found.')
+      throw new NotFoundException('User with the given Account ID not found.')
     }
 
     const updatedUser = await this.userModel

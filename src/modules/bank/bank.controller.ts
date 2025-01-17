@@ -1,10 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common'
 import { BankService } from './bank.service'
 import { ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { CreateUpdateBankDto } from './dtos/create-update-bank.dto'
 import { BankDto } from './dtos/bank.dto'
+import { AuthGuard } from '../../shared/validation'
 
 @Controller('/bank')
+@UseGuards(AuthGuard)
 export class BankController {
   constructor(private readonly bankService: BankService) {}
 

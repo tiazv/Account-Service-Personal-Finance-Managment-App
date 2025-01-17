@@ -27,6 +27,10 @@ export class UserDto {
   @IsOptional()
   bank_details: Bank
 
+  @ApiProperty({ example: '1234', description: "The user's clerk Id" })
+  @IsString()
+  account_id: string
+
   @ApiProperty({ example: '1000', description: "The user's total amount of money" })
   @IsNumber()
   total: number
